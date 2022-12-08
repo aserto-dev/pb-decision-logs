@@ -98,17 +98,14 @@ func Breaking() error {
 
 // build the image
 func Build() error {
-	fmt.Println("XXXXXXXXXXXXXXXXXXXXXX")
 	err := bufLogin()
 	if err != nil {
-		fmt.Println(err)
 		return err
 	}
 
 	if err := bufModUpdate("proto"); err != nil {
 		return err
 	}
-	fmt.Println("YYYYYYYYYYYYYYYYYYYYYYYYYY")
 
 	if err := bufBuild("bin/decision-logs.bin"); err != nil {
 		return err
@@ -217,7 +214,6 @@ func bufLogin() error {
 	}()
 
 	out, err := cmd.CombinedOutput()
-	fmt.Println("Combined output messages: ", string(out), err)
 	if err != nil {
 		return err
 	}
