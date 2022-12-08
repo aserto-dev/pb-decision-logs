@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option go_package = "github.com/aserto-dev/go-decision-logs/aserto/decision-logs/v1/api;api"; 
+option csharp_namespace = "Aserto.DecisionLogs.V1.API";
+
+package aserto.decisionlogs.api.v1;
+
+message PaginationRequest {
+  int32 size = 1;
+  string token = 2;
+}
+
+message PaginationResponse {
+  string next_token = 1;
+  int32 result_size = 2;
+  int32 total_size = 3;
+}

@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+
+option go_package = "github.com/aserto-dev/go-decision-logs/aserto/decision-logs/v1/api;api"; 
+option csharp_namespace = "Aserto.DecisionLogs.V1.API";
+
+package aserto.decisionlogs.api.v1;
+
+import "google/protobuf/descriptor.proto";
+
+enum IDType {
+  ID_TYPE_UNKNOWN         = 0;
+  ID_TYPE_ACCOUNT         = 1;
+  ID_TYPE_TENANT          = 2;
+  ID_TYPE_ERROR           = 3;
+  ID_TYPE_POLICY          = 4;
+  ID_TYPE_REQUEST         = 5;
+  ID_TYPE_PROVIDER        = 6;
+  ID_TYPE_CONNECTION      = 7;
+  ID_TYPE_INVITE          = 8;
+  ID_TYPE_POLICY_BUILDER  = 9;
+  ID_TYPE_POLICY_REPO     = 10;
+}
+
+extend google.protobuf.FieldOptions {
+  optional IDType id_type = 50002;
+}
+
+// Decorate an enum value with a string id.
+extend google.protobuf.EnumValueOptions   {
+  optional string id = 50002;
+}
