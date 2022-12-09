@@ -23,10 +23,10 @@ enum IDType {
 }
 
 extend google.protobuf.FieldOptions {
-  optional IDType id_type = 50002;
+  optional IDType id_type = 50003;
 }
 
 // Decorate an enum value with a string id.
 extend google.protobuf.EnumValueOptions   {
-  optional string id = 50002;
+  optional string id = 50003;
 }
