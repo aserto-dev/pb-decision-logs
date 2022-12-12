@@ -1,0 +1,300 @@
+syntax = "proto3";
+
+option go_package = "github.com/aserto-dev/go-grpc/aserto/decision_logs/v2;decision_logs"; 
+option csharp_namespace = "Aserto.DecisionLogs.V2";
+
+package aserto.decision_logs.v2;
+
+import "google/api/annotations.proto";
+import "aserto/decision-logs/v2/api/identity_context.proto";
+import "aserto/decision-logs/v2/api/pagination.proto";
+import "aserto/decision-logs/v2/api/policy_context.proto";
+import "aserto/decision-logs/v2/api/policy_instance.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+// OpenAPI annotations.
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+    schemes: HTTPS;
+    consumes: "application/json";
+    produces: "application/json";
+    security_definitions: {
+        security: {
+            key: "TenantID"
+            value: {
+                type: TYPE_API_KEY;
+                in: IN_HEADER;
+                name: "aserto-tenant-id";
+            }
+        }
+        security: {
+            key: "DecisionLogsAPIKey"
+            value: {
+                type: TYPE_API_KEY;
+                in: IN_HEADER;
+                name: "authorization";
+            }
+        }
+    }
+    security: {
+		security_requirement: {
+			key: "DecisionLogsAPIKey";
+			value: {};
+		}
+		security_requirement: {
+			key: "TenantID";
+			value: {};
+		}
+	}
+};
+
+service DecisionLogs {
+    rpc ListDecisionLogs (ListDecisionLogsRequest) returns (ListDecisionLogsResponse) {
+        option (google.api.http) = {
+            get: "/api/v2/decision_logs/decision_logs"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            tags: "decision_logs"
+            summary: "List available decision logs"
+            description: "Returns a collection of decision logs."
+            operation_id: "decision_logs.list_decision_logs"
+            deprecated: false
+            security: {
+                security_requirement: {
+					key: "TenantID";
+					value: {}
+				}
+                security_requirement: {
+					key: "DecisionLogsAPIKey";
+					value: {}
+				}
+            }
+        };
+    }
+
+    rpc GetDecisionLog (GetDecisionLogRequest) returns (GetDecisionLogResponse) {
+        option (google.api.http) = {
+            get: "/api/v2/decision_logs/decision_logs/{name}"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            tags: "decision_logs"
+            summary: "Get a decision log"
+            description: "Returns the location of a single decison log instance."
+            operation_id: "decision_logs.get_decision_log"
+            deprecated: false
+            security: {
+                security_requirement: {
+					key: "TenantID";
+					value: {}
+				}
+                security_requirement: {
+					key: "DecisionLogsAPIKey";
+					value: {}
+				}
+            }
+        };
+    }
+
+    rpc ListUsers (ListUsersRequest) returns (ListUsersResponse) {
+        option (google.api.http) = {
+            get: "/api/v2/decision_logs/users"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            tags: "decision_logs"
+            summary: "List users referenced by decision logs"
+            description: "Returns a collection of users that may be referenced by decision logs."
+            operation_id: "decision_logs.list_users"
+            deprecated: false
+            security: {
+                security_requirement: {
+					key: "TenantID";
+					value: {}
+				}
+                security_requirement: {
+					key: "DecisionLogsAPIKey";
+					value: {}
+				}
+            }
+        }; 
+    }
+
+    rpc GetUser (GetUserRequest) returns (GetUserResponse) {
+        option (google.api.http) = {
+            get: "/api/v2/decision_logs/users/{id}"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            tags: "decision_logs"
+            summary: "Get a user referenced by decision logs"
+            description: "Returns the location of a single user that may be referenced by decision logs."
+            operation_id: "decision_logs.get_user"
+            deprecated: false
+            security: {
+                security_requirement: {
+					key: "TenantID";
+					value: {}
+				}
+                security_requirement: {
+					key: "DecisionLogsAPIKey";
+					value: {}
+				}
+            }
+        };
+    }
+
+    rpc ExecuteQuery(ExecuteQueryRequest) returns (ExecuteQueryResponse) {
+        option (google.api.http) = {
+            post: "/api/v2/decision_logs/query"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            tags: "decision_logs"
+            summary: "query decision logs"
+            description: "Returns a collection of raw decision logs strings matching the query specification."
+            operation_id: "decision_logs.query"
+            deprecated: false
+            security: {
+                security_requirement: {
+					key: "TenantID";
+					value: {}
+				}
+                security_requirement: {
+					key: "DecisionLogsAPIKey";
+					value: {}
+				}
+            }
+        };
+    }
+
+    rpc GetDecisions(GetDecisionsRequest) returns (stream GetDecisionsResponse) {
+        option (google.api.http) = {
+            get: "/api/v2/decision_logs/decisions/policy/{policy_name}/{instance_label}"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            tags: "decision_logs"
+            summary: "decision event stream"
+            description: "Returns a stream of decisions"
+            operation_id: "decision_logs.decisions"
+            deprecated: false
+            security: {
+                security_requirement: {
+					key: "TenantID";
+					value: {}
+				}
+                security_requirement: {
+					key: "DecisionLogsAPIKey";
+					value: {}
+				}
+            }
+        };
+    }
+}
+
+message ListDecisionLogsRequest {
+    aserto.decisionlogs.api.v2.PaginationRequest page = 1;
+    repeated string policies = 2;
+}
+
+message ListDecisionLogsResponse {
+    aserto.decisionlogs.api.v2.PaginationResponse page = 1;
+    repeated DecisionLogItem results = 2;
+}
+
+message GetDecisionLogRequest {
+    string name = 1;
+}
+
+message GetDecisionLogResponse {
+    DecisionLog log = 1;
+}
+
+message DecisionLogItem {
+    string name = 1;
+}
+
+message DecisionLog {
+    string url = 1;
+}
+
+message ListUsersRequest {
+    aserto.decisionlogs.api.v2.PaginationRequest page = 1;    
+}
+
+message ListUsersResponse {
+    aserto.decisionlogs.api.v2.PaginationResponse page = 1;
+    repeated UserItem results = 2;
+}
+
+message GetUserRequest {
+    string id = 1;
+}
+
+message GetUserResponse {
+    User user = 1;
+}
+
+message UserItem {
+    string id = 1;
+    google.protobuf.Timestamp updated_at = 2;
+}
+
+message User {
+    string url = 1;
+}
+
+message ExecuteQueryRequest {
+    aserto.decisionlogs.api.v2.PaginationRequest page = 1;
+    string policy_name                                = 2;
+    string instance_label                             = 3;
+    int64 top_n                                       = 4;
+}
+
+message ExecuteQueryResponse {
+    aserto.decisionlogs.api.v2.PaginationResponse page = 1;
+    repeated Result results = 2;
+}
+
+message Result {
+    string log = 1 [deprecated = true];
+    Decision event = 2;
+}
+
+message GetDecisionsRequest {
+    string policy_name              = 1;
+    string instance_label           = 2;
+    google.protobuf.Timestamp since = 3;
+}
+
+message GetDecisionsResponse {
+    Decision decision = 1;   
+}
+
+// represents a decision that an authorizer performed in the past
+message Decision {
+    string id                           = 1;    // unique id, replay a decision starting with this, also useful to de-dup
+    google.protobuf.Timestamp timestamp = 2;    // UTC time when the decision was made
+    string path                         = 3;    // Policy path used in decision
+    DecisionUser user                   = 4;    // info about user for whom the decision as made
+    DecisionPolicy policy               = 5;    // info about policy used for the decision    
+    map<string, bool> outcomes          = 6;    // outcome of the decisions specified in the policy context
+    google.protobuf.Struct resource     = 7;    // the resource context used in a decision
+    map<string, string> annotations     = 8;    // annotations that may be added to a decision    
+    optional string tenant_id           = 9;    // id of the tenant that generated the decision
+}
+
+// information about a user on behalf of whom a decision was made
+message DecisionUser {    
+    aserto.decisionlogs.api.v2.IdentityContext context = 1;    // identity context used in the decision
+    string id                                          = 2;    // id of the user the identity resolved to    
+    string email                                       = 3;    // convinience human-readable identifier
+}
+
+// information about a policy used in a decision
+message DecisionPolicy {
+    aserto.decisionlogs.api.v2.PolicyContext  context          = 1;    // policy context used in the decision
+    string                                    registry_service = 2;    // registry service where policy was retrieved from (e.g. opcr.io)
+    string                                    registry_image   = 3;    // image of the policy in the registry, including org (e.g. acmecorp/peoplefinder-abac)
+    string                                    registry_tag     = 4;    // tag of the policy image (e.g. 0.8.2 or latest)
+    string                                    registry_digest  = 5;    // digest of the policy image 
+    aserto.decisionlogs.api.v2.PolicyInstance policy_instance  = 6;    // policy instance used in decision
+}
