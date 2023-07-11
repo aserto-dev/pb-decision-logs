@@ -105,7 +105,7 @@ service DecisionLogs {
             summary: "List users referenced by decision logs"
             description: "Returns a collection of users that may be referenced by decision logs."
             operation_id: "decision_logs.list_users"
-            deprecated: false
+            deprecated: true
             security: {
                 security_requirement: {
 					key: "TenantID";
@@ -128,7 +128,7 @@ service DecisionLogs {
             summary: "Get a user referenced by decision logs"
             description: "Returns the location of a single user that may be referenced by decision logs."
             operation_id: "decision_logs.get_user"
-            deprecated: false
+            deprecated: true
             security: {
                 security_requirement: {
 					key: "TenantID";
