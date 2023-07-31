@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option go_package = "github.com/aserto-dev/go-decision-logs/aserto/scribe/v2;scribe"; 
+option csharp_namespace = "Aserto.Scribe.V2";
+
+package aserto.scribe.v2;
+
+import "google/protobuf/any.proto";
+
+service Scribe {
+    rpc WriteBatch (stream WriteBatchRequest) returns (stream WriteBatchResponse) {}
+}
+
+message WriteBatchRequest {
+    string id = 1;
+    repeated google.protobuf.Any batch = 2;
+}
+
+message WriteBatchResponse {
+    string id = 1;
+    bool ack = 2;
+}
